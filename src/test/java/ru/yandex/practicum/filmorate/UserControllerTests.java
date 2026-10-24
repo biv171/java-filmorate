@@ -19,8 +19,7 @@ class UserControllerTests {
         try {
             userController.update(user);
         } catch (ValidationException e) {
-            Assertions.assertEquals
-                    ("Некорректный ввод email: либо пусто, либо нет @", e.getMessage());
+            Assertions.assertEquals("Некорректный ввод email: либо пусто, либо нет @", e.getMessage());
         }
     }
 
@@ -30,8 +29,7 @@ class UserControllerTests {
         try {
             userController.update(user);
         } catch (ValidationException e) {
-            Assertions.assertEquals
-                    ("Некорректный ввод email: либо пусто, либо нет @", e.getMessage());
+            Assertions.assertEquals("Некорректный ввод email: либо пусто, либо нет @", e.getMessage());
         }
     }
 
@@ -41,8 +39,7 @@ class UserControllerTests {
         try {
             userController.update(user);
         } catch (ValidationException e) {
-            Assertions.assertEquals
-                    ("Некорректный ввод логина: либо пусто, либо есть пробелы", e.getMessage());
+            Assertions.assertEquals("Некорректный ввод логина: либо пусто, либо есть пробелы", e.getMessage());
         }
     }
 
@@ -54,8 +51,7 @@ class UserControllerTests {
         try {
             userController.update(user);
         } catch (ValidationException e) {
-            Assertions.assertEquals
-                    ("Некорректный ввод логина: либо пусто, либо есть пробелы", e.getMessage());
+            Assertions.assertEquals("Некорректный ввод логина: либо пусто, либо есть пробелы", e.getMessage());
         }
     }
 
