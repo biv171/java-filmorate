@@ -9,7 +9,7 @@ public class User {
     String email = "";
     String login = "";
     String name = "";
-    LocalDate birthday = LocalDate.of(1000,10,10);;
+    LocalDate birthday = LocalDate.of(1000,10,10);
 
     public String checkNameLogin() {
         if (getName() == null || getName().isBlank())
