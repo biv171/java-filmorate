@@ -63,8 +63,8 @@ class FilmControllerTests {
 		try {
 			filmController.update(film);
 		} catch (ValidationException e) {
-			Assertions.assertEquals
-					("Продолжительность фильма должна быть положительным числом!", e.getMessage());
+			Assertions.assertEquals("Продолжительность фильма должна быть положительным числом!",
+					e.getMessage());
 		}
 	}
 
