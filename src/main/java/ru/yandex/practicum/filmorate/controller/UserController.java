@@ -24,6 +24,43 @@ public class UserController {
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
     public User update(@RequestBody User user) {
+        //Валидация
+        validate(user);
+        if (user.getId() == null) {
+            user.setId(getNextId());
+            user.setEmail(user.getEmail());
+            user.setLogin(user.getLogin());
+            user.setName(user.checkNameLogin());
+            user.setBirthday(user.getBirthday());
+            users.put(user.getId(), user);
+            log.info("LOGGER Users: добавление данных SUCCESS {}", user);
+            return user;
+        }
+
+        if (users.containsKey(user.getId())) { //
+            User changeUser = users.get(user.getId());
+            changeUser.setEmail(user.getEmail());
+            changeUser.setLogin(user.getLogin());
+            changeUser.setName(user.checkNameLogin());
+            changeUser.setBirthday(user.getBirthday());
+            log.info("LOGGER Users: изменение данных SUCCESS {}", user);
+            return changeUser;
+        } else {
+            log.error("LOGGER Users: такого id не существует");
+            throw new ValidationException("Такого id user не существует");
+        }
+    }
+
+    private long getNextId() {
+        long currentMaxId = users.keySet()
+                .stream()
+                .mapToLong(id -> id)
+                .max()
+                .orElse(0);
+        return ++currentMaxId;
+    }
+
+    private void validate(User user) {
         log.info("LOGGER Users: валидация начало процесса");
         if (user.getEmail() == null || !user.getEmail().contains("@")) {
             log.error("LOGGER Users: некорректный ввод email: либо пусто, либо нет @");
@@ -38,37 +75,5 @@ public class UserController {
             throw new ValidationException("День рождение не может быть в будущем!");
         }
         log.info("LOGGER Users: валидация данных SUCCESS");
-
-        if (users.containsKey(user.getId())) { //
-            User changeUser = users.get(user.getId());
-            changeUser.setEmail(user.getEmail());
-            changeUser.setLogin(user.getLogin());
-            changeUser.setName(user.checkNameLogin());
-            changeUser.setBirthday(user.getBirthday());
-            log.info("LOGGER Users: изменение данных SUCCESS {}", user);
-            return changeUser;
-        }
-
-        if (user.getId() == null)
-            user.setId(getNextId());
-        else
-            user.setId(user.getId());
-        user.setEmail(user.getEmail());
-        user.setLogin(user.getLogin());
-        user.setName(user.checkNameLogin());
-        user.setBirthday(user.getBirthday());
-
-        users.put(user.getId(), user);
-        log.info("LOGGER Users: добавление данных SUCCESS {}", user);
-        return user;
-    }
-
-    private long getNextId() {
-        long currentMaxId = users.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
-        return ++currentMaxId;
     }
 }
