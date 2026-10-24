@@ -53,8 +53,10 @@ public class FilmController {
             log.info("INFO Films: изменение данных SUCCESS {}", film);
             return changeFilm;
         }
-
-        film.setId(getNextId());
+        if (film.getId() == null)
+            film.setId(getNextId());
+        else
+            film.setId(film.getId());
         film.setName(film.getName());
         film.setDescription(film.getDescription());
         film.setReleaseDate(film.getReleaseDate());

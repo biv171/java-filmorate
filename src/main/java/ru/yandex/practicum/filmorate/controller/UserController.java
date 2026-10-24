@@ -39,7 +39,7 @@ public class UserController {
         }
         log.info("LOGGER Users: валидация данных SUCCESS");
 
-        if (users.containsKey(user.getId())) {
+        if (users.containsKey(user.getId())) { //
             User changeUser = users.get(user.getId());
             changeUser.setEmail(user.getEmail());
             changeUser.setLogin(user.getLogin());
@@ -49,7 +49,10 @@ public class UserController {
             return changeUser;
         }
 
-        user.setId(getNextId());
+        if (user.getId() == null)
+            user.setId(getNextId());
+        else
+            user.setId(user.getId());
         user.setEmail(user.getEmail());
         user.setLogin(user.getLogin());
         user.setName(user.checkNameLogin());
