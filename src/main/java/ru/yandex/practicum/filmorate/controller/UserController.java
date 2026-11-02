@@ -22,22 +22,27 @@ public class UserController {
         return users.values();
     }
 
-    @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
-    public User update(@RequestBody User user) {
+    @PostMapping
+    public User create(@RequestBody User user) {
         //Валидация
         validate(user);
         if (user.getId() == null) {
             user.setId(getNextId());
-            user.setEmail(user.getEmail());
-            user.setLogin(user.getLogin());
-            user.setName(user.checkNameLogin());
-            user.setBirthday(user.getBirthday());
-            users.put(user.getId(), user);
-            log.info("LOGGER Users: добавление данных SUCCESS {}", user);
-            return user;
         }
+        user.setEmail(user.getEmail());
+        user.setLogin(user.getLogin());
+        user.setName(user.checkNameLogin());
+        user.setBirthday(user.getBirthday());
+        users.put(user.getId(), user);
+        log.info("LOGGER Users: добавление данных SUCCESS {}", user);
+        return user;
+    }
 
-        if (users.containsKey(user.getId())) { //
+    @PutMapping
+    public User update(@RequestBody User user) {
+        //Валидация
+        validate(user);
+        if (users.containsKey(user.getId())) {
             User changeUser = users.get(user.getId());
             changeUser.setEmail(user.getEmail());
             changeUser.setLogin(user.getLogin());

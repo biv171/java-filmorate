@@ -22,21 +22,26 @@ public class FilmController {
         return films.values();
     }
 
-    @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
-    public Film update(@RequestBody Film film) {
+    @PostMapping
+    public Film create(@RequestBody Film film) {
         // Валидация
         validate(film);
         if (film.getId() == null) {
             film.setId(getNextId());
-            film.setName(film.getName());
-            film.setDescription(film.getDescription());
-            film.setReleaseDate(film.getReleaseDate());
-            film.setDuration(film.getDuration());
-            films.put(film.getId(), film);
-            log.info("INFO Films: добавление данных SUCCESS {}", film);
-            return film;
         }
+        film.setName(film.getName());
+        film.setDescription(film.getDescription());
+        film.setReleaseDate(film.getReleaseDate());
+        film.setDuration(film.getDuration());
+        films.put(film.getId(), film);
+        log.info("INFO Films: добавление данных SUCCESS {}", film);
+        return film;
+    }
 
+    @PutMapping
+    public Film update(@RequestBody Film film) {
+        // Валидация
+        validate(film);
         if (films.containsKey(film.getId())) {
             Film changeFilm = films.get(film.getId());
             changeFilm.setName(film.getName());

@@ -74,7 +74,7 @@ class FilmControllerTests {
 		film.setDuration(100);
 		film.setDescription("Описание фильма про судьбу");
 		film.setReleaseDate(LocalDate.of(2020,10,10));
-		filmController.update(film);
+		filmController.create(film);
 
 		Assertions.assertEquals("Poklonka", film.getName());
 		Assertions.assertEquals(100, film.getDuration());

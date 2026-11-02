@@ -59,7 +59,7 @@ class UserControllerTests {
     void ifNameIsEmptyLoginMustBeEqual() {
         user.setLogin("Ivan");
         user.setEmail("yandex@dss.ru");
-        userController.update(user);
+        userController.create(user);
         Assertions.assertEquals("Ivan", user.getName());
     }
 
@@ -81,7 +81,7 @@ class UserControllerTests {
         user.setLogin("Alexander");
         user.setEmail("yandex@dss.ru");
         user.setBirthday(LocalDate.of(1988, 12, 27));
-        userController.update(user);
+        userController.create(user);
 
         Assertions.assertEquals("Alexander", user.getLogin());
         Assertions.assertEquals("Alexander", user.getName());
