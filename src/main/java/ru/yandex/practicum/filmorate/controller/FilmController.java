@@ -71,15 +71,15 @@ public class FilmController {
             log.error("LOGGER Films: имя фильма должно быть указано!!");
             throw new ValidationException("Имя фильма должно быть указано!");
         }
-        if (film.getDescription().length() > 200) {
+        if (film.getDescription() == null || film.getDescription().length() > 200) {
             log.error("LOGGER Films: длина описания не более 200 символов!!");
             throw new ValidationException("Длина описания не более 200 символов!");
         }
-        if (film.getReleaseDate().isBefore(minDateTime)) {
+        if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(minDateTime)) {
             log.error("LOGGER Films: дата релиза должна быть не раньше 28.12.1895!");
             throw new ValidationException("Дата релиза должна быть не раньше 28.12.1895!");
         }
-        if (film.getDuration() < 0) {
+        if (film.getDuration() == null || film.getDuration() <= 0) {
             log.error("LOGGER Films: продолжительность фильма должна быть положительным числом!");
             throw new ValidationException("Продолжительность фильма должна быть положительным числом!");
         }

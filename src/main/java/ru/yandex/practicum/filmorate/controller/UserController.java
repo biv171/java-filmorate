@@ -75,9 +75,9 @@ public class UserController {
             log.error("LOGGER Users: некорректный ввод логина: либо пусто, либо есть пробелы");
             throw new ValidationException("Некорректный ввод логина: либо пусто, либо есть пробелы");
         }
-        if (user.getBirthday().isAfter(nowDateTime)) {
-            log.error("LOGGER Users: день рождение не может быть в будущем!");
-            throw new ValidationException("День рождение не может быть в будущем!");
+        if (user.getBirthday() == null || user.getBirthday().isAfter(nowDateTime)) {
+            log.error("LOGGER Users: некорректная дата дня рождения!");
+            throw new ValidationException("Некорректная дата дня рождения!");
         }
         log.info("LOGGER Users: валидация данных SUCCESS");
     }

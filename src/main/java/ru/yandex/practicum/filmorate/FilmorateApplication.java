@@ -6,7 +6,7 @@ import ch.qos.logback.classic.Level;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = "ru.yandex.practicum.filmorate.controller")
+@SpringBootApplication
 public class FilmorateApplication {
 	private static final Logger log = LoggerFactory.getLogger(FilmorateApplication.class);
 

@@ -17,7 +17,7 @@ class FilmControllerTests {
 	@Test
 	void mustBeExceptionWithEmptyFilmName() {
 		try {
-			filmController.update(film);
+			filmController.create(film);
 		} catch (ValidationException e) {
 			Assertions.assertEquals("Имя фильма должно быть указано!", e.getMessage());
 		}
@@ -35,7 +35,7 @@ class FilmControllerTests {
 		film.setDescription(string201.toString());
 
 		try {
-			filmController.update(film);
+			filmController.create(film);
 		} catch (ValidationException e) {
 			Assertions.assertEquals("Длина описания не более 200 символов!", e.getMessage());
 		}
@@ -48,7 +48,7 @@ class FilmControllerTests {
 		film.setReleaseDate(LocalDate.of(1895, 12, 27));
 
 		try {
-			filmController.update(film);
+			filmController.create(film);
 		} catch (ValidationException e) {
 			Assertions.assertEquals("Дата релиза должна быть не раньше 28.12.1895!", e.getMessage());
 		}
@@ -61,7 +61,7 @@ class FilmControllerTests {
 		film.setDuration(-100);
 
 		try {
-			filmController.update(film);
+			filmController.create(film);
 		} catch (ValidationException e) {
 			Assertions.assertEquals("Продолжительность фильма должна быть положительным числом!",
 					e.getMessage());
@@ -69,7 +69,21 @@ class FilmControllerTests {
 	}
 
 	@Test
-	void mustBeSuccessWithCorrectDataField() {
+	void withZeroDurationMustBeException() {
+		film.setName("Marko Polo");
+		film.setReleaseDate(LocalDate.of(1895, 12, 28));
+		film.setDuration(0);
+
+		try {
+			filmController.create(film);
+		} catch (ValidationException e) {
+			Assertions.assertEquals("Продолжительность фильма должна быть положительным числом!",
+					e.getMessage());
+		}
+	}
+
+	@Test
+	void mustBeSuccessWithCreateDataField() {
 		film.setName("Poklonka");
 		film.setDuration(100);
 		film.setDescription("Описание фильма про судьбу");
@@ -80,5 +94,28 @@ class FilmControllerTests {
 		Assertions.assertEquals(100, film.getDuration());
 		Assertions.assertEquals("Описание фильма про судьбу", film.getDescription());
 		Assertions.assertEquals(LocalDate.of(2020,10,10), film.getReleaseDate());
+	}
+
+	@Test
+	void mustBeSuccessWithChangetDataField() {
+		film.setName("Poklonka");
+		film.setDuration(100);
+		film.setDescription("Описание фильма про судьбу");
+		film.setReleaseDate(LocalDate.of(2020,10,10));
+
+		filmController.create(film);
+
+		film.setName("Майор Пейн");
+		film.setDuration(150);
+		film.setDescription("Описание фильма про маленький паровозик!");
+		film.setReleaseDate(LocalDate.of(1999,5,16));
+
+		filmController.update(film);
+
+		Assertions.assertEquals(1, film.getId());
+		Assertions.assertEquals("Майор Пейн", film.getName());
+		Assertions.assertEquals(150, film.getDuration());
+		Assertions.assertEquals("Описание фильма про маленький паровозик!", film.getDescription());
+		Assertions.assertEquals(LocalDate.of(1999,5,16), film.getReleaseDate());
 	}
 }
