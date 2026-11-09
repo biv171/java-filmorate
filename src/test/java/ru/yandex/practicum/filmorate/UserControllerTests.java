@@ -6,13 +6,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+
 import java.time.LocalDate;
 
 
 @SpringBootTest
 class UserControllerTests {
     User user = new User();
-    UserController userController = new UserController();
+    InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
+    UserService userService = new UserService(inMemoryUserStorage);
+    UserController userController = new UserController(userService);
 
     @Test
     void mustBeExceptionWithEmptyEmail() {

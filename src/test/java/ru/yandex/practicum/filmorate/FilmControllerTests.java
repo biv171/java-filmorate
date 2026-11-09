@@ -6,13 +6,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import java.time.LocalDate;
 
 
 @SpringBootTest
 class FilmControllerTests {
 	Film film = new Film();
-	FilmController filmController = new FilmController();
+	InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
+	InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
+	FilmService filmService = new FilmService(inMemoryFilmStorage, inMemoryUserStorage);
+	FilmController filmController = new FilmController(filmService);
 
 	@Test
 	void mustBeExceptionWithEmptyFilmName() {
