@@ -17,7 +17,9 @@ public class FilmController {
     private final FilmService filmService;
 
     @GetMapping
-    public Collection<Film> findAll() { return filmService.findAll(); }
+    public Collection<Film> findAll() {
+        return filmService.findAll();
+    }
 
     @GetMapping("/{id}")
     public Optional<Film> findFilm(@PathVariable Long id) {
@@ -34,7 +36,9 @@ public class FilmController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Film create(@RequestBody Film film) { return filmService.create(film); }
+    public Film create(@RequestBody Film film) {
+        return filmService.create(film);
+    }
 
     @PutMapping
     public Film update(@RequestBody Film film) {
@@ -42,8 +46,7 @@ public class FilmController {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public Film addSmile(@PathVariable Long id,
-                         @PathVariable Long userId) {
+    public Film addSmile(@PathVariable Long id, @PathVariable Long userId) {
         return filmService.addFilmSmile(id, userId);
     }
 
