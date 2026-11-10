@@ -20,8 +20,8 @@ public class UserService {
 
     private final UserStorage userStorage;
 
-    public Map<Long, User> findAll() {
-        return userStorage.findAll();
+    public Collection<User> findAll() {
+        return userStorage.findAll().values();
     }
 
     public Optional<User> findById(Long id) {

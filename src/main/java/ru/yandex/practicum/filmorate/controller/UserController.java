@@ -18,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public Map<Long, User> findAll() {
+    public Collection<User> findAll() {
         return userService.findAll();
     }
 
