@@ -20,17 +20,25 @@ public class UserService {
 
     private final UserStorage userStorage;
 
-    public Map<Long, User> findAll() { return userStorage.findAll(); }
+    public Map<Long, User> findAll() {
+        return userStorage.findAll();
+    }
 
     public Optional<User> findById(Long id) {
         return userStorage.findById(id);
     }
 
-    public Collection<User> getFriendsList(long userId) { return userStorage.getFriendsList(userId); }
+    public Collection<User> getFriendsList(long userId) {
+        return userStorage.getFriendsList(userId);
+    }
 
-    public User create(User user) { return userStorage.create(user); }
+    public User create(User user) {
+        return userStorage.create(user);
+    }
 
-    public User update(User user) { return userStorage.update(user); }
+    public User update(User user) {
+        return userStorage.update(user);
+    }
 
     public Collection<User> getCommonFriends(long firstUserId, long secondUserId) {
         //Валидация идентификатора пользователя
