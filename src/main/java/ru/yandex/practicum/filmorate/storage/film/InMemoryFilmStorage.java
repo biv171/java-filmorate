@@ -109,7 +109,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         Optional<Film> film = findById(filmId);
         if (film.isEmpty()) {
             log.error("LOGGER Films: фильм с id = {} не найден", filmId);
-            throw new ValidationException("LOGGER Users: фильм с id = {" + filmId +"} не найден");
+            throw new ValidationException("LOGGER Users: фильм с id = {" + filmId + "} не найден");
         }
         return film.get();
     }

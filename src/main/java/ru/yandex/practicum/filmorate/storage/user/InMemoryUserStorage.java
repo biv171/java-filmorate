@@ -109,7 +109,7 @@ public class InMemoryUserStorage implements UserStorage {
         Optional<User> user = findById(userId);
         if (user.isEmpty()) {
             log.error("LOGGER Users: пользователь с id = {} не найден", userId);
-            throw new ValidationException("LOGGER Users: пользователь с id = {" + userId +"} не найден");
+            throw new ValidationException("LOGGER Users: пользователь с id = {" + userId + "} не найден");
         }
         return user.get();
     }
