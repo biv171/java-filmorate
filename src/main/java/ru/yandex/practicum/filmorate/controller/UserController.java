@@ -1,84 +1,59 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import lombok.extern.slf4j.Slf4j;
+import ru.yandex.practicum.filmorate.service.UserService;
 import java.util.Collection;
-import java.util.HashMap;
-import java.time.LocalDate;
-import java.util.Map;
 
 
-@Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
-    private final Map<Long, User> users = new HashMap<>();
-    private final LocalDate nowDateTime = LocalDate.now();
+    private final UserService userService;
 
     @GetMapping
     public Collection<User> findAll() {
-        return users.values();
+        return userService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public User findById(@PathVariable Long id) {
+        return userService.findById(id)
+                .orElseThrow(() -> new NotFoundException("Фильм с id=" + id + " не найден"));
+    }
+
+    @GetMapping("/{id}/friends")
+    public Collection<User> getFriendsList(@PathVariable long id) {
+        return userService.getFriendsList(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public Collection<User> getCommonFriends(@PathVariable long id, @PathVariable long otherId) {
+        return userService.getCommonFriends(id, otherId);
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
-        //Валидация
-        validate(user);
-        if (user.getId() == null) {
-            user.setId(getNextId());
-        }
-        user.setEmail(user.getEmail());
-        user.setLogin(user.getLogin());
-        user.setName(user.checkNameLogin());
-        user.setBirthday(user.getBirthday());
-        users.put(user.getId(), user);
-        log.info("LOGGER Users: добавление данных SUCCESS {}", user);
-        return user;
+        return userService.create(user);
     }
 
     @PutMapping
     public User update(@RequestBody User user) {
-        //Валидация
-        validate(user);
-        if (users.containsKey(user.getId())) {
-            User changeUser = users.get(user.getId());
-            changeUser.setEmail(user.getEmail());
-            changeUser.setLogin(user.getLogin());
-            changeUser.setName(user.checkNameLogin());
-            changeUser.setBirthday(user.getBirthday());
-            log.info("LOGGER Users: изменение данных SUCCESS {}", user);
-            return changeUser;
-        } else {
-            log.error("LOGGER Users: такого id не существует");
-            throw new ValidationException("Такого id user не существует");
-        }
+        return userService.update(user);
     }
 
-    private long getNextId() {
-        long currentMaxId = users.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
-        return ++currentMaxId;
+    @PutMapping("/{id}/friends/{friendId}")
+    public User addFriend(@PathVariable long id, @PathVariable long friendId) {
+        return userService.addFriend(id, friendId);
     }
 
-    private void validate(User user) {
-        log.info("LOGGER Users: валидация начало процесса");
-        if (user.getEmail() == null || !user.getEmail().contains("@")) {
-            log.error("LOGGER Users: некорректный ввод email: либо пусто, либо нет @");
-            throw new ValidationException("Некорректный ввод email: либо пусто, либо нет @");
-        }
-        if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
-            log.error("LOGGER Users: некорректный ввод логина: либо пусто, либо есть пробелы");
-            throw new ValidationException("Некорректный ввод логина: либо пусто, либо есть пробелы");
-        }
-        if (user.getBirthday() == null || user.getBirthday().isAfter(nowDateTime)) {
-            log.error("LOGGER Users: некорректная дата дня рождения!");
-            throw new ValidationException("Некорректная дата дня рождения!");
-        }
-        log.info("LOGGER Users: валидация данных SUCCESS");
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public User deleteFriend(@PathVariable long id, @PathVariable long friendId) {
+        return userService.deleteFriend(id, friendId);
     }
 }

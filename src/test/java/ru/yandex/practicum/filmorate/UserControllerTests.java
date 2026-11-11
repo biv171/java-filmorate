@@ -1,65 +1,77 @@
 package ru.yandex.practicum.filmorate;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import java.time.LocalDate;
 
 
 @SpringBootTest
 class UserControllerTests {
-    User user = new User();
-    UserController userController = new UserController();
+    private User user;
+    private InMemoryUserStorage userStorage;
+    private UserService service;
+    private UserController controller;
+
+    @BeforeEach
+    void setUp() {
+        user = new User();
+        userStorage = new InMemoryUserStorage();
+        service = new UserService(userStorage);
+        controller = new UserController(service);
+    }
 
     @Test
     void mustBeExceptionWithEmptyEmail() {
-        try {
-            userController.create(user);
-        } catch (ValidationException e) {
-            Assertions.assertEquals("Некорректный ввод email: либо пусто, либо нет @", e.getMessage());
-        }
+        ValidationException e = Assertions.assertThrows(
+                ValidationException.class,
+                () -> controller.create(user)
+        );
+        Assertions.assertEquals("Некорректный ввод email: либо пусто, либо нет @", e.getMessage());
     }
 
     @Test
     void mustBeExceptionWithIncorrectEmail() {
         user.setEmail("xxx");
-        try {
-            userController.create(user);
-        } catch (ValidationException e) {
-            Assertions.assertEquals("Некорректный ввод email: либо пусто, либо нет @", e.getMessage());
-        }
+        ValidationException e = Assertions.assertThrows(
+                ValidationException.class,
+                () -> controller.create(user)
+        );
+        Assertions.assertEquals("Некорректный ввод email: либо пусто, либо нет @", e.getMessage());
     }
 
     @Test
     void mustBeExceptionWithEmptyLogin() {
         user.setEmail("yandex@dss.ru");
-        try {
-            userController.create(user);
-        } catch (ValidationException e) {
-            Assertions.assertEquals("Некорректный ввод логина: либо пусто, либо есть пробелы", e.getMessage());
-        }
+        ValidationException e = Assertions.assertThrows(
+                ValidationException.class,
+                () -> controller.create(user)
+        );
+        Assertions.assertEquals("Некорректный ввод логина: либо пусто, либо есть пробелы", e.getMessage());
     }
 
     @Test
     void mustBeExceptionWithBlankInLogin() {
         user.setEmail("yandex@dss.ru");
         user.setName("Mark Tven");
-
-        try {
-            userController.create(user);
-        } catch (ValidationException e) {
-            Assertions.assertEquals("Некорректный ввод логина: либо пусто, либо есть пробелы", e.getMessage());
-        }
+        ValidationException e = Assertions.assertThrows(
+                ValidationException.class,
+                () -> controller.create(user)
+        );
+        Assertions.assertEquals("Некорректный ввод логина: либо пусто, либо есть пробелы", e.getMessage());
     }
 
     @Test
     void ifNameIsEmptyLoginMustBeEqual() {
         user.setLogin("Ivan");
         user.setEmail("yandex@dss.ru");
-        userController.create(user);
+        Assertions.assertDoesNotThrow(() -> controller.create(user));
         Assertions.assertEquals("Ivan", user.getName());
     }
 
@@ -69,11 +81,11 @@ class UserControllerTests {
         user.setEmail("yandex@dss.ru");
         user.setBirthday(LocalDate.of(2088, 12, 27));
 
-        try {
-            userController.create(user);
-        } catch (ValidationException e) {
-            Assertions.assertEquals("Некорректная дата дня рождения!", e.getMessage());
-        }
+        ValidationException e = Assertions.assertThrows(
+                ValidationException.class,
+                () -> controller.create(user)
+        );
+        Assertions.assertEquals("Некорректная дата дня рождения!", e.getMessage());
     }
 
     @Test
@@ -81,7 +93,7 @@ class UserControllerTests {
         user.setLogin("Alexander");
         user.setEmail("yandex@dss.ru");
         user.setBirthday(LocalDate.of(1988, 12, 27));
-        userController.create(user);
+        Assertions.assertDoesNotThrow(() -> controller.create(user));
 
         Assertions.assertEquals("Alexander", user.getLogin());
         Assertions.assertEquals("Alexander", user.getName());
@@ -94,12 +106,12 @@ class UserControllerTests {
         user.setLogin("Alexander");
         user.setEmail("yandex@dss.ru");
         user.setBirthday(LocalDate.of(1988, 12, 27));
-        userController.create(user);
+        Assertions.assertDoesNotThrow(() -> controller.create(user));
 
         user.setLogin("Vladislav");
         user.setEmail("google@gm.com");
         user.setBirthday(LocalDate.of(1982, 4, 20));
-        userController.update(user);
+        Assertions.assertDoesNotThrow(() -> controller.update(user));
 
         Assertions.assertEquals(1, user.getId());
         Assertions.assertEquals("Vladislav", user.getLogin());
