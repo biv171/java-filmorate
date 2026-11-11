@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import java.util.Collection;
-import java.util.Optional;
 
 
 @RestController
@@ -22,11 +21,9 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Film> findFilm(@PathVariable Long id) {
-        Optional<Film> film = filmService.findById(id);
-        if (film.isEmpty())
-            throw new NotFoundException("Такой id не найден");
-        return film;
+    public Film findFilm(@PathVariable Long id) {
+        return filmService.findById(id)
+                .orElseThrow(() -> new NotFoundException("Фильм с id=" + id + " не найден"));
     }
 
     @GetMapping("/popular")
